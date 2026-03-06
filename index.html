@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ литературных жанров по годам - Интерактивная платформа</title>
+    <meta name="description" content="Современная интерактивная платформа для анализа литературных жанров, трендов и статистики по годам">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <!-- GSAP для анимаций -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js для 3D эффектов -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    
+    <!-- D3.js для графов -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>LitAnalytics</span>
+                </div>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#hero" class="nav-link active">Главная</a></li>
+                    <li><a href="#analysis" class="nav-link">Анализ</a></li>
+                    <li><a href="#genres" class="nav-link">Жанры</a></li>
+                    <li><a href="#analytics" class="nav-link">Аналитика</a></li>
+                    <li><a href="#timeline" class="nav-link">Таймлайн</a></li>
+                    <li><a href="#search" class="nav-link">Поиск</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    <button class="mobile-toggle" id="mobileToggle" aria-label="Меню">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background" id="heroBackground"></div>
+        <div class="hero-particles" id="heroParticles"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="title-line">Анализ литературных</span>
+                    <span class="title-line">жанров по годам</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Исследуйте эволюцию литературы с помощью интерактивной аналитики, 
+                    визуализаций и AI-анализа трендов
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="startAnalysis">
+                        <span>Начать анализ</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="exploreGenres">
+                        <span>Каталог жанров</span>
+                        <i class="fas fa-book"></i>
+                    </button>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" data-target="35">0</div>
+                        <div class="stat-label">Жанров</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" data-target="500">0</div>
+                        <div class="stat-label">Лет истории</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" data-target="1000">0</div>
+                        <div class="stat-label">Авторов</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis Section -->
+    <section class="section analysis-section" id="analysis">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Анализ популярности жанров</h2>
+                <p class="section-subtitle">Интерактивные графики и сравнение литературных трендов</p>
+            </div>
+
+            <div class="analysis-controls glass-card">
+                <div class="control-group">
+                    <label for="yearStart">Начало периода</label>
+                    <input type="number" id="yearStart" min="1500" max="2025" value="1800" class="input-field">
+                </div>
+                
+                <div class="control-group">
+                    <label for="yearEnd">Конец периода</label>
+                    <input type="number" id="yearEnd" min="1500" max="2025" value="2025" class="input-field">
+                </div>
+                
+                <div class="control-group">
+                    <label for="genreFilter">Фильтр жанров</label>
+                    <select id="genreFilter" class="input-field" multiple>
+                        <option value="all" selected>Все жанры</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" id="updateAnalysis">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Обновить</span>
+                </button>
+            </div>
+
+            <div class="analysis-chart glass-card">
+                <canvas id="trendsChart" style="height: 500px;"></canvas>
+            </div>
+
+            <div class="genre-comparison">
+                <h3>Сравнение жанров</h3>
+                <div class="comparison-grid" id="comparisonGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Genres Catalog -->
+    <section class="section genres-section" id="genres">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Каталог литературных жанров</h2>
+                <p class="section-subtitle">Полная классификация с историей и примерами</p>
+            </div>
+
+            <div class="genre-categories">
+                <!-- Эпические жанры -->
+                <div class="genre-category">
+                    <div class="category-header">
+                        <i class="fas fa-book"></i>
+                        <h3>Эпические жанры (Проза)</h3>
+                    </div>
+                    <div class="genre-grid" id="epicGenres"></div>
+                </div>
+
+                <!-- Лирические жанры -->
+                <div class="genre-category">
+                    <div class="category-header">
+                        <i class="fas fa-feather"></i>
+                        <h3>Лирические жанры (Поэзия)</h3>
+                    </div>
+                    <div class="genre-grid" id="lyricGenres"></div>
+                </div>
+
+                <!-- Драматические жанры -->
+                <div class="genre-category">
+                    <div class="category-header">
+                        <i class="fas fa-theater-masks"></i>
+                        <h3>Драматические жанры (Пьесы)</h3>
+                    </div>
+                    <div class="genre-grid" id="dramaticGenres"></div>
+                </div>
+
+                <!-- Лиро-эпические жанры -->
+                <div class="genre-category">
+                    <div class="category-header">
+                        <i class="fas fa-scroll"></i>
+                        <h3>Лиро-эпические жанры</h3>
+                    </div>
+                    <div class="genre-grid" id="lyroEpicGenres"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="section analytics-section" id="analytics">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Аналитический раздел</h2>
+                <p class="section-subtitle">Детальная статистика и визуализация данных</p>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card glass-card">
+                    <h3>Распределение жанров</h3>
+                    <canvas id="genreDistributionChart" style="height: 300px;"></canvas>
+                </div>
+
+                <div class="analytics-card glass-card">
+                    <h3>Тренды по десятилетиям</h3>
+                    <canvas id="decadeTrendsChart" style="height: 300px;"></canvas>
+                </div>
+
+                <div class="analytics-card glass-card">
+                    <h3>Рост и падение популярности</h3>
+                    <canvas id="popularityChangeChart" style="height: 300px;"></canvas>
+                </div>
+
+                <div class="analytics-card glass-card">
+                    <h3>Сравнение эпох</h3>
+                    <canvas id="eraComparisonChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section timeline-section" id="timeline">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Таймлайн истории литературы</h2>
+                <p class="section-subtitle">Интерактивная временная шкала с 3D визуализацией</p>
+            </div>
+
+            <div class="timeline-controls glass-card">
+                <button class="timeline-btn" data-era="ancient">Античность</button>
+                <button class="timeline-btn" data-era="medieval">Средневековье</button>
+                <button class="timeline-btn" data-era="renaissance">Возрождение</button>
+                <button class="timeline-btn" data-era="enlightenment">Просвещение</button>
+                <button class="timeline-btn" data-era="romanticism">Романтизм</button>
+                <button class="timeline-btn" data-era="realism">Реализм</button>
+                <button class="timeline-btn" data-era="modernism">Модернизм</button>
+                <button class="timeline-btn" data-era="contemporary">Современность</button>
+            </div>
+
+            <div class="timeline-3d glass-card" id="timeline3D"></div>
+
+            <div class="timeline-horizontal" id="timelineHorizontal"></div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="section search-section" id="search">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Поиск и фильтрация</h2>
+                <p class="section-subtitle">Найдите жанры, авторов, книги и периоды</p>
+            </div>
+
+            <div class="search-container glass-card">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Поиск по жанрам, авторам, книгам..." class="search-input">
+                </div>
+
+                <div class="search-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-globe"></i>
+                        <span>Все</span>
+                    </button>
+                    <button class="filter-btn" data-filter="genres">
+                        <i class="fas fa-book"></i>
+                        <span>Жанры</span>
+                    </button>
+                    <button class="filter-btn" data-filter="authors">
+                        <i class="fas fa-user"></i>
+                        <span>Авторы</span>
+                    </button>
+                    <button class="filter-btn" data-filter="books">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Книги</span>
+                    </button>
+                    <button class="filter-btn" data-filter="years">
+                        <i class="fas fa-calendar"></i>
+                        <span>Годы</span>
+                    </button>
+                </div>
+
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- World Map Section -->
+    <section class="section map-section" id="worldMap">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Карта мировой литературы</h2>
+                <p class="section-subtitle">Литературные жанры и авторы по странам мира</p>
+            </div>
+
+            <div class="map-container glass-card">
+                <div id="worldMapViz"></div>
+                <div class="map-legend" id="mapLegend"></div>
+            </div>
+
+            <div class="map-info" id="mapInfo"></div>
+        </div>
+    </section>
+
+    <!-- 3D Library Section -->
+    <section class="section library-section" id="library">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Виртуальная библиотека</h2>
+                <p class="section-subtitle">3D визуализация литературных произведений</p>
+            </div>
+
+            <div class="library-3d glass-card" id="library3D"></div>
+
+            <div class="library-controls">
+                <button class="library-btn" data-shelf="classics">Классика</button>
+                <button class="library-btn" data-shelf="modern">Современная</button>
+                <button class="library-btn" data-shelf="poetry">Поэзия</button>
+                <button class="library-btn" data-shelf="drama">Драма</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network Graph Section -->
+    <section class="section network-section" id="network">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Граф связей литературы</h2>
+                <p class="section-subtitle">Визуализация взаимосвязей авторов, жанров и произведений</p>
+            </div>
+
+            <div class="network-controls glass-card">
+                <button class="network-btn" data-type="authors">Авторы</button>
+                <button class="network-btn" data-type="genres">Жанры</button>
+                <button class="network-btn" data-type="books">Произведения</button>
+                <button class="network-btn" data-type="influence">Влияние</button>
+            </div>
+
+            <div class="network-graph glass-card" id="networkGraph"></div>
+        </div>
+    </section>
+
+    <!-- Genre Modal -->
+    <div class="modal" id="genreModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content glass-card">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-body" id="modalBody">
+                <!-- Динамический контент -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-text">Загрузка...</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>LitAnalytics</h4>
+                    <p>Интерактивная платформа для анализа литературных жанров</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <ul>
+                        <li><a href="#hero">Главная</a></li>
+                        <li><a href="#analysis">Анализ</a></li>
+                        <li><a href="#genres">Жанры</a></li>
+                        <li><a href="#analytics">Аналитика</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="#timeline">Таймлайн</a></li>
+                        <li><a href="#search">Поиск</a></li>
+                        <li><a href="#library">Библиотека</a></li>
+                        <li><a href="#network">Граф связей</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Социальные сети</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 LitAnalytics. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/genres.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/library3d.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
